@@ -46,10 +46,10 @@ public class NabavaTestHtmlUnit {
 		
 		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='loginForm']/form/fieldset/ol[3]/li/strong/a"))).click();
 		
-		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HH_mm");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm");
 		Date datum = new Date();
-		String username = dateFormat.format(datum);
-		username += "test";
+		String username = "test";
+		username += dateFormat.format(datum);
 		
 		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='screenName']"))).sendKeys(username);
 		driver.findElement(By.xpath(".//*[@id='email']")).sendKeys(mail);
@@ -78,7 +78,6 @@ public class NabavaTestHtmlUnit {
 		}
 		
 		driver.findElement(By.xpath(".//*[@id='submit']")).click();
-		
 		
 		try {
 			Thread.sleep(10000);
