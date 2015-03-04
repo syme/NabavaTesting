@@ -23,23 +23,20 @@ public class NabavaTestFirefox {
 	}
 	
 	public static String GetEmail(WebDriver driver) {
-		driver.get("http://getairmail.com");
+		driver.get("http://temp-mail.org/");
 		
-		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/section[2]/div/section/div/section/section/div/a"))).click();
-		String mail = new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='tempemail']"))).getAttribute("value");
-		
-		return mail;
+		System.out.println(driver.getCurrentUrl());
+		String temp = driver.findElement(By.id("mail")).getAttribute("value");
+		return temp;
 	}
 	
 	public static String GetPassword(WebDriver driver) {
+		driver.get("http://temp-mail.org/");
 		
-		driver.get("http://getairmail.com");
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.partialLinkText("Nabava.net"))).click();
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("html/body/div[1]/div/div/div[2]/div/div/div[3]/p[2]/b")));
 		
-		new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='ui_inbox']/table/tbody/tr[2]/td[2]")));
-		
-		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='ui_inbox']/table/tbody/tr[1]/td[2]"))).click();
-		String pass = new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='view_mail']/table/tbody/tr[2]/td[1]/b"))).getText();
-		
+		String pass = driver.findElement(By.xpath("html/body/div[1]/div/div/div[2]/div/div/div[3]/p[2]/b")).getText();
 		return pass;
 	}
 
@@ -59,7 +56,7 @@ public class NabavaTestFirefox {
 		driver.findElement(By.xpath(".//*[@id='email']")).sendKeys(Keys.RETURN);
 		
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(5000);
 		}
 		catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
@@ -82,13 +79,19 @@ public class NabavaTestFirefox {
 		
 		driver.findElement(By.xpath(".//*[@id='submit']")).click();
 		
-		boolean isPresent = driver.findElements(By.xpath(".//*[@id='ui-id-1']")).size() > 0;
+		try {
+			Thread.sleep(10000);
+		}
+		catch(InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
 		
-		if(isPresent) {
+		try {
+			driver.findElement(By.xpath(".//*[@id='headnav2']/li[2]/a")).click();
 			System.out.println("Registracija uspjesna!");
 		}
-		else {
-			System.out.println("Desila se greska pri registraciji!");
+		catch(Exception e) {
+			System.out.println("Neuspjesna registracija.");
 		}
 	}
 }

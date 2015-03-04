@@ -1,6 +1,7 @@
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -12,8 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class NabavaTestHtmlUnit {
 	
-	public static void main(String[] args) {
-
+	public static void main(String[] args) {	
 		WebDriver driver = new HtmlUnitDriver();
 		
 		String mail = GetEmail(driver);
@@ -25,7 +25,6 @@ public class NabavaTestHtmlUnit {
 	public static String GetEmail(WebDriver driver) {
 		driver.get("http://temp-mail.org/");
 		
-		System.out.println(driver.getCurrentUrl());
 		String temp = driver.findElement(By.id("mail")).getAttribute("value");
 		return temp;
 	}
@@ -33,7 +32,7 @@ public class NabavaTestHtmlUnit {
 	public static String GetPassword(WebDriver driver) {
 		driver.get("http://temp-mail.org/");
 		
-		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("html/body/div[1]/div/div/div[2]/div/div/table/tbody/tr/td[2]/a"))).click();
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.partialLinkText("Nabava.net"))).click();
 		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("html/body/div[1]/div/div/div[2]/div/div/div[3]/p[2]/b")));
 		
 		String pass = driver.findElement(By.xpath("html/body/div[1]/div/div/div[2]/div/div/div[3]/p[2]/b")).getText();
