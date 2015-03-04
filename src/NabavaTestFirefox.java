@@ -1,6 +1,7 @@
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -84,10 +85,10 @@ public class NabavaTestFirefox {
 		boolean isPresent = driver.findElements(By.xpath(".//*[@id='ui-id-1']")).size() > 0;
 		
 		if(isPresent) {
-			System.out.println("IT'S ALIVE!!!");
+			System.out.println("Registracija uspjesna!");
 		}
 		else {
-			System.out.println("Welp... fuck");
+			System.out.println("Desila se greska pri registraciji!");
 		}
 	}
 }
