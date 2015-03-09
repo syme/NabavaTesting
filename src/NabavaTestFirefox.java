@@ -12,14 +12,89 @@ import org.openqa.selenium.Keys;
 
 public class NabavaTestFirefox {
 
+	static String testingAcc = "testingAccount@mailinator.com";
+	static String testingPass = "Olp0zdUlDT";
+	
 	public static void main(String[] args) {
 		
+		WishListTest();
+	}
+	
+	public static void WishListTest() {
+		WebDriver driver = new FirefoxDriver();
+		
+		NabavaLogin(driver, testingAcc, testingPass);
+		fillWishlist(driver);
+		giveTimeToLoad(2);
+		emptyWishlist(driver);
+	}
+	
+	public static void emptyWishlist(WebDriver driver) {
+		driver.get("http://www.nabava.net/lista_zelja.php");
+		
+		giveTimeToLoad(3);
+		
+		String tempXpath;
+		
+		for(int i = 1; i <= 3; i++) {
+			tempXpath = ".//*[@id='content']/form/table/tbody/tr[2]/td[5]/a";
+			driver.findElement(By.xpath(tempXpath)).click();
+			driver.navigate().refresh();
+			giveTimeToLoad(5);
+		}
+		
+		
+		String temp = driver.findElement(By.xpath(".//*[@id='content']/p[2]/strong")).getText();
+
+		assert temp.equals("Vaša lista želja trenutno je prazna.") : "Greska u praznjenju liste zelja";
+		System.out.println("Lista zelja radi ispravno!");
+	}
+	
+	public static void fillWishlist(WebDriver driver) {
+		giveTimeToLoad(3);
+		
+		assert driver.getCurrentUrl().equals("http://www.nabava.net/login") : "Login nije uspio";
+		
+		driver.findElement(By.xpath(".//*[@id='categoriesMenu']/li[7]/a")).click();
+		driver.findElement(By.xpath(".//*[@id='categoriesMenu']/li[7]/a")).click();
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='main']/div[3]/div[2]/ul/li[1]/ul/li[5]/a"))).click();
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='main']/div[3]/div[2]/ul/li[1]/ul/li[1]/a"))).click();
+		
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("html/body/div[3]/div[3]/div[1]/form/ul/li[3]/ul[1]/li[2]/div[4]/ol/li[4]/a"))).click();
+		driver.findElement(By.xpath(".//*[@id='forma']/ul/li[3]/ul[1]/li[2]/div[2]/h3/a")).click();
+		
+		giveTimeToLoad(3);
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("html/body/div[3]/div[3]/div/ul/li/div/ul/li/ol/li/ul/li/ul/li[3]/div[2]/ol/li[1]/a"))).click();
+		
+		driver.findElement(By.id("s")).sendKeys("lenovo");
+		driver.findElement(By.id("s")).sendKeys(Keys.RETURN);
+		
+		giveTimeToLoad(5);
+		
+		int listItemsCount = driver.findElements(By.className("offerToolbar")).size();
+		String tempXpath;
+		String className;
+		
+		for(int i = 1; i <= listItemsCount; i++) {
+			tempXpath = ".//*[@id='forma']/ul/li[3]/ul/li[" + i * 2 + "]/ul/li[3]/a";
+			className = driver.findElement(By.xpath(tempXpath)).getAttribute("class");
+			
+			if(className.equals("invisible")) {
+				tempXpath = ".//*[@id='forma']/ul/li[3]/ul/li[" + ((i * 2) - 1) + "]/div[2]/ol/li[1]/a";
+				driver.findElement(By.xpath(tempXpath)).click();
+				break;
+			}
+		}
+	}
+	
+	public static void CreateAccount() {
 		WebDriver driver = new FirefoxDriver();
 		
 		String mail = GetEmail(driver);
 		NabavaRegister(driver, mail);
 		String pass = GetPassword(driver);
 		NabavaLogin(driver, mail, pass);
+		CheckLoginSuccess(driver);
 	}
 	
 	public static String GetEmail(WebDriver driver) {
@@ -55,12 +130,7 @@ public class NabavaTestFirefox {
 		driver.findElement(By.xpath(".//*[@id='email']")).sendKeys(mail);
 		driver.findElement(By.xpath(".//*[@id='email']")).sendKeys(Keys.RETURN);
 		
-		try {
-			Thread.sleep(5000);
-		}
-		catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
+		giveTimeToLoad(5);
 	}
 	
 	public static void NabavaLogin(WebDriver driver, String mail, String pass) {
@@ -78,13 +148,10 @@ public class NabavaTestFirefox {
 		}
 		
 		driver.findElement(By.xpath(".//*[@id='submit']")).click();
-		
-		try {
-			Thread.sleep(10000);
-		}
-		catch(InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
+	}
+	
+	public static void CheckLoginSuccess(WebDriver driver) {
+		giveTimeToLoad(10);
 		
 		try {
 			driver.findElement(By.xpath(".//*[@id='headnav2']/li[2]/a")).click();
@@ -94,4 +161,14 @@ public class NabavaTestFirefox {
 			System.out.println("Neuspjesna registracija.");
 		}
 	}
+	
+	public static void giveTimeToLoad(int sec) {
+		try {
+			Thread.sleep(sec * 1000);
+		}
+		catch(InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+	}
+
 }
