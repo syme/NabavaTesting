@@ -11,17 +11,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
+
 
 public class NabavaTestHtmlUnit {
 
@@ -55,15 +46,15 @@ public class NabavaTestHtmlUnit {
 
 		driver.get("http://www.nabava.net/prijenosna-racunala__30");
 		giveTimeToLoad(10);
-		/*
+		
 		WebElement proizvod = driver.findElement(By.xpath(".//*[@id='forma']/ul/li[3]/ul[1]/li[2]/div[2]/h3/a"));
 		
 		String idProizvod = proizvod.toString();
 		idProizvod = idProizvod.substring(idProizvod.indexOf("Product name click - "));
 		idProizvod = idProizvod.substring(21, 27);
-		//System.out.println(idProizvod);
+
 		String fullId = "proizvod" + idProizvod;
-		//System.out.println(fullId);
+
 		String parametar = "NABAVA.listaZeljaUpdate('proizvod=" + idProizvod + "', '" + fullId + "', 'search');";
 		
 		if (driver instanceof JavascriptExecutor) {
@@ -72,7 +63,7 @@ public class NabavaTestHtmlUnit {
 		}
 		
 		driver.navigate().refresh();
-		*/
+		
 		driver.findElement(By.xpath(".//*[@id='forma']/ul/li[3]/ul[1]/li[4]/div[2]/h3/a")).click();
 		
 		System.out.println(driver.getCurrentUrl());
