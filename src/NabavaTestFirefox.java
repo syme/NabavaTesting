@@ -66,7 +66,7 @@ public class NabavaTestFirefox {
 		giveTimeToLoad(3);
 		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("html/body/div[3]/div[3]/div/ul/li/div/ul/li/ol/li/ul/li/ul/li[3]/div[2]/ol/li[1]/a"))).click();
 		
-		driver.findElement(By.id("s")).sendKeys("lenovo");
+		driver.findElement(By.id("s")).sendKeys("lenovo g500");
 		driver.findElement(By.id("s")).sendKeys(Keys.RETURN);
 		
 		giveTimeToLoad(5);

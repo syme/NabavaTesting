@@ -1,5 +1,3 @@
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -58,18 +56,64 @@ public class NabavaTestHtmlUnit {
 		String parametar = "NABAVA.listaZeljaUpdate('proizvod=" + idProizvod + "', '" + fullId + "', 'search');";
 		
 		if (driver instanceof JavascriptExecutor) {
-			((JavascriptExecutor) driver)
-				.executeScript(parametar);
+			((JavascriptExecutor) driver).executeScript(parametar);
 		}
 		
 		driver.navigate().refresh();
 		
+		String temp = driver.findElement(By.xpath(".//*[@id='headnav2']/li[1]/a/span")).getText();
+		assert temp.equals("1") : "Nije unesen proizvod!";
+		
 		driver.findElement(By.xpath(".//*[@id='forma']/ul/li[3]/ul[1]/li[4]/div[2]/h3/a")).click();
 		
-		System.out.println(driver.getCurrentUrl());
+		proizvod = driver.findElement(By.xpath(".//*[@id='ponude']/li/ul/li[1]/ul/li[3]/div/ol/li/a"));
+		parametar = proizvod.toString();
+		parametar = parametar.substring(parametar.indexOf("onclick=") + 9, parametar.indexOf(" title=") - 1);
+
+		if(driver instanceof JavascriptExecutor) {
+			((JavascriptExecutor) driver).executeScript(parametar);
+		}
 		
-		String temp = driver.findElement(By.xpath(".//*[@id='headnav2']/li[1]/a/span")).getText();
-		System.out.println(temp);
+		driver.navigate().refresh();
+		
+		temp = driver.findElement(By.xpath(".//*[@id='headnav2']/li[1]/a/span")).getText();
+		assert temp.equals("2") : "Nije unesen artikl!";
+		
+		giveTimeToLoad(3);
+		
+		driver.findElement(By.id("s")).sendKeys("lenovo g500");
+		driver.findElement(By.id("s")).sendKeys(Keys.RETURN);
+		
+		giveTimeToLoad(10);
+		
+		String strBrojRezultata = driver.findElement(By.xpath(".//*[@id='forma']/ul/li[2]/p")).getText();
+		strBrojRezultata = strBrojRezultata.substring(16);
+		int brojRezultata = Integer.parseInt(strBrojRezultata);
+		
+		String klasa;
+		
+		for(int i = 1; i <= brojRezultata; i++) {
+			klasa = driver.findElement(By.xpath(".//*[@id='forma']/ul/li[3]/ul/li[" + (i * 2) + "]/ul/li[3]/a")).toString();
+
+			if(klasa.contains("invisible")) {
+				parametar = driver.findElement(By.xpath(".//*[@id='forma']/ul/li[3]/ul/li[" + ((i * 2) - 1) + "]/div[2]/ol/li/a")).toString();
+				parametar = parametar.substring(parametar.indexOf("onclick=") + 9, parametar.indexOf("title=") - 2);
+				System.out.println(parametar);
+				
+				if(driver instanceof JavascriptExecutor) {
+					System.out.println("HACK THE PLANET");
+					((JavascriptExecutor) driver).executeScript(parametar);
+				}
+				break;
+			}
+		}
+		
+		driver.navigate().refresh();
+		giveTimeToLoad(2);
+		
+		temp = driver.findElement(By.xpath(".//*[@id='headnav2']/li[1]/a/span")).getText();
+		assert temp.equals("3") : "Nije unesen nekategorizirani artikl!";
+		System.out.println("Uspjesan unos!");
 	}
 
 	public static void CreateAccount() {
