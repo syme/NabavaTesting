@@ -19,7 +19,6 @@ public class NabavaTestHtmlUnit {
 
 	public static void main(String[] args) {
 
-		WishListTest();
 	}
 
 	public static void WishListTest() {
@@ -34,7 +33,22 @@ public class NabavaTestHtmlUnit {
 	}
 
 	public static void emptyWishlist(WebDriver driver) {
-
+		driver.get("http://www.nabava.net/lista_zelja.php");
+		
+		assert driver.getCurrentUrl().equals("http://www.nabava.net/lista_zelja.php") : "Nije pronadjena lista zelja";
+		
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='content']/form/table/tbody/tr[2]/td[5]/a"))).click();
+		driver.navigate().refresh();
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='content']/form/table/tbody/tr[2]/td[5]/a"))).click();
+		driver.navigate().refresh();
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='content']/form/table/tbody/tr[2]/td[5]/a"))).click();
+		driver.navigate().refresh();
+		
+		giveTimeToLoad(5);
+		String potvrda = driver.findElement(By.xpath(".//*[@id='content']/p[2]")).getText();
+		
+		assert potvrda.equals("Vaša lista želja trenutno je prazna.") : "Brisanje nije uspjelo";
+		System.out.println("Uspjesno brisanje iz liste!");
 	}
 
 	public static void fillWishlist(WebDriver driver) {
@@ -98,10 +112,9 @@ public class NabavaTestHtmlUnit {
 			if(klasa.contains("invisible")) {
 				parametar = driver.findElement(By.xpath(".//*[@id='forma']/ul/li[3]/ul/li[" + ((i * 2) - 1) + "]/div[2]/ol/li/a")).toString();
 				parametar = parametar.substring(parametar.indexOf("onclick=") + 9, parametar.indexOf("title=") - 2);
-				System.out.println(parametar);
 				
 				if(driver instanceof JavascriptExecutor) {
-					System.out.println("HACK THE PLANET");
+					
 					((JavascriptExecutor) driver).executeScript(parametar);
 				}
 				break;
@@ -109,9 +122,13 @@ public class NabavaTestHtmlUnit {
 		}
 		
 		driver.navigate().refresh();
-		giveTimeToLoad(2);
+		giveTimeToLoad(5);
 		
-		temp = driver.findElement(By.xpath(".//*[@id='headnav2']/li[1]/a/span")).getText();
+		driver.get("http://www.nabava.net/lista_zelja.php");
+		
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//*[@id='main']/div[3]/div[2]/ul/li/ul/li[2]/a/span")));
+		temp = driver.findElement(By.xpath(".//*[@id='main']/div[3]/div[2]/ul/li/ul/li[2]/a/span")).getText();
+		
 		assert temp.equals("3") : "Nije unesen nekategorizirani artikl!";
 		System.out.println("Uspjesan unos!");
 	}
